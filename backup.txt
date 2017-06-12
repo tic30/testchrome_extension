@@ -1,0 +1,112 @@
+
+<script>
+        /**
+         * Facebook share URL.
+         */
+        var FB_SHARE_URL = "http://www.facebook.com/sharer.php?u=";
+
+        /**
+         * Twitter share URL.
+         */
+        var TWITTER_SHARE_URL = "http://twitter.com/share?&url=";
+
+        /**
+         * Buzz share URL.
+         */
+        var BUZZ_SHARE_URL = "http://www.google.com/buzz/post?&url=";
+
+        /**
+         * Opens new window either of facebook, twitter or google buzz.
+         * @param {String} id Specifies whether to share news on Facebook, Google Buzz
+         *     or Twitter.
+         * @param {String} url Contains URL of the News to be shared.
+         */
+        function openNewsShareWindow(id, url) {
+            var newsUrl = url.substring(url.indexOf('&url=') + 5);
+            var openUrl;
+            switch (id) {
+                case 'fb':
+                    openUrl = FB_SHARE_URL;
+                    break;
+                case 'buzz':
+                    openUrl = BUZZ_SHARE_URL;
+                    break;
+                case 'twitter':
+                    openUrl = TWITTER_SHARE_URL;
+                    break;
+            }
+            window.open(openUrl + newsUrl, '_blank',
+                'resizable=0,scrollbars=0,width=690,height=415');
+        }
+
+        /**
+         * Checks language in image url retrieved from feed and sets style of 
+         * title and openbox in pop-up page(if url is found), otherwise sets
+         * to default styling.
+         */
+        function setStyleByLang(titleImgUrl) {
+            var openBoxes = document.getElementsByClassName('open_box');
+            var itemTitles = document.getElementsByClassName('item_title');
+
+            if (titleImgUrl != 'NULL') {
+                var pattern = /ar_/gi;
+                var result = titleImgUrl.match(pattern);
+                if (result != null || titleImgUrl == ISRAEL_IMAGE_URL) {
+                    document.querySelector('body').className = 'rtl';
+                }
+            }
+        }
+
+        /**
+         * Reports the height.
+         */
+        function reportHeight() {
+            var msg = JSON.stringify({
+                type: "size",
+                size: document.body.offsetHeight
+            });
+            parent.postMessage(msg, "*");
+        }
+
+        /**
+         * Initialize the iframe body.
+         */
+        function frameLoaded() {
+            var links = document.getElementsByTagName("A");
+            for (var i = 0, link; link = links[i]; i++) {
+                var class = link.className;
+                if (class != "item_title" && class != "open_box") {
+                    link.addEventListener("click", showStory);
+                }
+            }
+            window.addEventListener("message", messageHandler);
+        }
+
+        /**
+         * Redirects to Google news site according to clicked URL.
+         * @param {Object} event Onclick event.
+         */
+        function showStory(event) {
+            var href = event.currentTarget.href;
+            parent.postMessage(JSON.stringify({
+                type: "show",
+                url: href
+            }), "*");
+            event.preventDefault();
+        }
+
+        /**
+         * Handles message.
+         * @param {Object} event Onmessage event.
+         */
+        function messageHandler(event) {
+            reportHeight();
+        }
+
+    </script>
+
+,
+  "web_accessible_resources": [
+    "images/*",
+    "jsons/*"
+  ]
