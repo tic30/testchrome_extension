@@ -23,6 +23,7 @@ function getURLInfo() {
         } else {
             console.log("Can not detect URL: ");
             console.log(tabs);
+            $('.wrapper #content-wrapper').css("display","none");
         }
     });
 }
