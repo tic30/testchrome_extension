@@ -1,4 +1,4 @@
-var jobDetail = "";
+var jobDetail = "";//become an array later
 var currenthostname = "";
 var mustHaveSkills = ["basic", "qualifications", "required", "experience", "expertise", "minimum"];
 var goodToHaveSkills = ["preferred", "qualifications", "ideal", "candidate"];//"is a plus"
@@ -72,9 +72,12 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
             return;
         }
         if(detailsDiv.length > 0){
-            jobDetail = detailsDiv.prop('innerHTML');//.toLowerCase();
-            jobDetail = jobDetail.replace(/[^\w\s\s+<>]/g,' ');
+            jobDetail = detailsDiv.prop('innerHTML').toLowerCase();
+            //play with string
+            jobDetail = jobDetail.replace(/[,.<>\/\s+]/g, ' ');//replace <> to space, or we can do:(/[^\w\s\s+]/g,' '); which replace all none-char/number to space
+            jobDetail = jobDetail.split(" ");
             console.log(jobDetail);
+            
             //console.log("pageSource fetch complete, get:");
             //console.log(jobDetail);
             //console.log(chrome.extension.getURL('/jsons/keywords.json'));
