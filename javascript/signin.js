@@ -20,12 +20,27 @@ function getURLInfo() {
             $('.wrapper img#page-icon').attr("src", tabs[0].favIconUrl);
             $('.wrapper span#page-title').html("Welcome to " + currenthostname + "!");
             $('.wrapper button').removeAttr("disabled");
+            //test highlight word
+            highlight($('.wrapper span#page-title'), "Welcome");
         } else {
             console.log("Can not detect URL: ");
             console.log(tabs);
             $('.wrapper #content-wrapper').css("display","none");
         }
     });
+}
+
+function highlight(jqueryElement, text)
+{
+    var innerHTML = jqueryElement.html();
+    debugger;
+    var index = innerHTML.indexOf(text);
+    if ( index >= 0 )
+    { 
+        innerHTML = innerHTML.substring(0,index) + "<span class='highlight'>" + innerHTML.substring(index,index+text.length) + "</span>" + innerHTML.substring(index + text.length);
+        jqueryElement.html(innerHTML);
+    }
+
 }
 
 function getLocation(href) {
